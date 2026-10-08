@@ -8,8 +8,10 @@ const state = {
   queue: [],
   index: 0,
   score: 0,
-  wrong: [], // { question, picked }
+  wrong: [], // { question, picked, usedHint }
   answered: false,
+  hintShown: false,
+  hintsUsed: 0,
 };
 
 /* ---------- 오답 노트 (localStorage) ---------- */
@@ -109,6 +111,7 @@ function startQuiz(questions) {
   state.index = 0;
   state.score = 0;
   state.wrong = [];
+  state.hintsUsed = 0;
   showScreen("quiz");
   renderQuestion();
 }
@@ -139,8 +142,21 @@ function renderQuestion() {
     list.appendChild(li);
   });
 
+  state.hintShown = false;
+  $("#hint-btn").disabled = !q.hint;
+  $("#hint-text").hidden = true;
   $("#feedback").hidden = true;
   $("#next-btn").hidden = true;
+}
+
+function showHint() {
+  const q = state.queue[state.index];
+  if (state.answered || state.hintShown || !q.hint) return;
+  state.hintShown = true;
+  state.hintsUsed++;
+  $("#hint-text").textContent = q.hint;
+  $("#hint-text").hidden = false;
+  $("#hint-btn").disabled = true;
 }
 
 function choose(picked) {
@@ -152,6 +168,7 @@ function choose(picked) {
   const buttons = document.querySelectorAll(".choice-btn");
   const wrongIds = loadWrongIds();
 
+  $("#hint-btn").disabled = true;
   buttons.forEach((btn, i) => {
     btn.disabled = true;
     if (i === q.answer) btn.classList.add("correct");
@@ -162,7 +179,7 @@ function choose(picked) {
     state.score++;
     wrongIds.delete(q.id);
   } else {
-    state.wrong.push({ question: q, picked });
+    state.wrong.push({ question: q, picked, usedHint: state.hintShown });
     wrongIds.add(q.id);
   }
   saveWrongIds(wrongIds);
@@ -204,11 +221,14 @@ function showResult() {
     percent >= 60 ? "3급 합격선(60점) 수준이에요. 오답을 꼭 복습해 보세요." :
     "아직 합격선 아래예요. 해설을 읽으며 다시 풀어 봐요.";
 
+  $("#result-hints").textContent =
+    state.hintsUsed > 0 ? `힌트 사용: ${state.hintsUsed}회` : "힌트 없이 풀었어요!";
+
   $("#retry-wrong-btn").hidden = state.wrong.length === 0;
 
   const review = $("#review");
   review.innerHTML = "";
-  for (const { question: q, picked } of state.wrong) {
+  for (const { question: q, picked, usedHint } of state.wrong) {
     const item = document.createElement("div");
     item.className = "review-item";
     item.innerHTML = `
@@ -217,6 +237,12 @@ function showResult() {
       <p class="review-answer"></p>
       <p class="review-explain"></p>`;
     item.querySelector("h3").textContent = `[${q.era}] ${q.question}`;
+    if (usedHint) {
+      const badge = document.createElement("span");
+      badge.className = "review-hint";
+      badge.textContent = "힌트 사용";
+      item.querySelector("h3").appendChild(badge);
+    }
     item.querySelector(".review-mine").textContent = `내 답: ${CIRCLED[picked]} ${q.choices[picked]}`;
     item.querySelector(".review-answer").textContent = `정답: ${CIRCLED[q.answer]} ${q.choices[q.answer]}`;
     item.querySelector(".review-explain").textContent = q.explanation;
@@ -238,6 +264,7 @@ $("#clear-wrong-btn").addEventListener("click", () => {
   updateWrongNote();
 });
 $("#next-btn").addEventListener("click", next);
+$("#hint-btn").addEventListener("click", showHint);
 $("#quit-btn").addEventListener("click", () => {
   updateWrongNote();
   showScreen("start");
@@ -247,9 +274,13 @@ $("#retry-wrong-btn").addEventListener("click", () => {
 });
 $("#home-btn").addEventListener("click", () => showScreen("start"));
 
-// 키보드: 1~5로 선택, Enter로 다음 문제
+// 키보드: 1~5로 선택, H로 힌트, Enter로 다음 문제
 document.addEventListener("keydown", (e) => {
   if ($("#quiz-screen").hidden) return;
+  if (e.key === "h" || e.key === "H" || e.key === "ㅗ") {
+    showHint();
+    return;
+  }
   const n = Number(e.key);
   if (!state.answered && n >= 1 && n <= state.queue[state.index].choices.length) {
     choose(n - 1);

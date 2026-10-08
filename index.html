@@ -68,6 +68,11 @@
       <h2 id="question-text" class="question"></h2>
       <ol id="choices" class="choices"></ol>
 
+      <div class="hint-area">
+        <button type="button" id="hint-btn" class="hint-btn">💡 힌트 보기 <kbd>H</kbd></button>
+        <p id="hint-text" class="hint-text" hidden aria-live="polite"></p>
+      </div>
+
       <div id="feedback" class="feedback" hidden aria-live="polite">
         <p id="feedback-title" class="feedback-title"></p>
         <p id="explanation"></p>
@@ -84,6 +89,7 @@
       <h2>결과</h2>
       <p class="score-big"><span id="result-score"></span></p>
       <p id="result-msg" class="result-msg"></p>
+      <p id="result-hints" class="result-msg"></p>
 
       <div class="row">
         <button type="button" id="retry-wrong-btn" class="primary-btn">틀린 문제 다시 풀기</button>

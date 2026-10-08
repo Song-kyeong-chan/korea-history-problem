@@ -12,6 +12,8 @@
   --correct-bg: #e5f3ea;
   --wrong: #b23a2b;
   --wrong-bg: #fbe8e5;
+  --hint: #8a6100;
+  --hint-bg: #fbf1d6;
   --shadow: 0 2px 12px rgba(60, 45, 20, 0.08);
 }
 
@@ -30,6 +32,8 @@
     --correct-bg: #1f3428;
     --wrong: #ef8a7c;
     --wrong-bg: #3d2420;
+  --hint: #e5bd5c;
+  --hint-bg: #3a3020;
     --shadow: none;
   }
 }
@@ -48,6 +52,8 @@
   --correct-bg: #1f3428;
   --wrong: #ef8a7c;
   --wrong-bg: #3d2420;
+  --hint: #e5bd5c;
+  --hint-bg: #3a3020;
   --shadow: none;
 }
 
@@ -349,6 +355,59 @@ button:disabled {
 
 .choice-btn.wrong .choice-num {
   color: var(--wrong);
+}
+
+/* 힌트 */
+.hint-area {
+  margin-top: 14px;
+}
+
+.hint-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px dashed var(--hint);
+  background: transparent;
+  color: var(--hint);
+  font-weight: 500;
+}
+
+.hint-btn:hover:not(:disabled) {
+  background: var(--hint-bg);
+}
+
+.hint-btn kbd {
+  font: inherit;
+  font-size: 0.75rem;
+  padding: 0 5px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.hint-text {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--hint-bg);
+  color: var(--text);
+}
+
+.hint-text::before {
+  content: "💡 힌트  ";
+  font-weight: 700;
+  color: var(--hint);
+}
+
+.review-hint {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--hint-bg);
+  color: var(--hint);
+  vertical-align: middle;
 }
 
 /* 해설 */
