@@ -5,11 +5,20 @@
 ## 구조
 
 ```
-index.html             화면 구조
+index.html             화면 구조 (객관식 / OX / 단답형 / 십자말풀이 탭)
 style.css              스타일 (라이트/다크 모드)
-script.js              퀴즈 로직, 오답 노트(localStorage)
-data/questions.json    문제 데이터
+js/common.js           공통 도구 (데이터 불러오기, 시대 선택, 저장소)
+js/mcq.js              객관식 + 오답 노트
+js/ox.js               OX 퀴즈
+js/short.js            키워드 단답형 (힌트 → 초성 순서로 공개)
+js/crossword.js        십자말풀이 (단답형 단어로 매번 새 퍼즐 생성)
+js/app.js              탭 전환 (#mcq, #ox, #short, #cross 주소로 바로 열기)
+data/questions.json    객관식 500문제
+data/ox.json           OX 문장
+data/short.json        단답형 문제 (객관식 중 정답이 단어인 문제를 변환, 십자말풀이도 이 데이터를 사용)
 ```
+
+CSS·JS를 수정한 뒤 배포할 때는 `index.html`의 `?v=` 숫자를 올려 주세요. 브라우저에 남은 예전 파일 대신 새 파일을 받게 됩니다.
 
 ## 로컬에서 실행
 

@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>한국사 퀴즈</title>
-  <meta name="description" content="한국사능력검정시험 심화 기출 출제 포인트로 만든 한국사 퀴즈">
+  <meta name="description" content="한국사능력검정시험 심화 기출 출제 포인트로 만든 한국사 퀴즈 - 객관식, OX, 단답형, 십자말풀이">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <header class="site-header">
@@ -16,97 +16,296 @@
     <p class="subtitle">한능검 심화 기출 포인트로 정리한 문제</p>
   </header>
 
+  <nav class="tabs" role="tablist" aria-label="퀴즈 종류">
+    <button type="button" role="tab" id="tab-mcq" data-tab="mcq" aria-controls="panel-mcq">객관식</button>
+    <button type="button" role="tab" id="tab-ox" data-tab="ox" aria-controls="panel-ox">OX</button>
+    <button type="button" role="tab" id="tab-short" data-tab="short" aria-controls="panel-short">단답형</button>
+    <button type="button" role="tab" id="tab-cross" data-tab="cross" aria-controls="panel-cross">십자말풀이</button>
+  </nav>
+
   <main>
-    <!-- 시작 화면 -->
-    <section id="start-screen" class="card">
-      <h2>문제 범위 고르기</h2>
-      <p id="total-count" class="total-count"></p>
-      <div id="era-filters" class="chips" role="group" aria-label="시대 선택"></div>
-      <div class="row">
-        <button type="button" id="select-all-btn" class="text-btn">전체 선택</button>
-        <button type="button" id="select-none-btn" class="text-btn">전체 해제</button>
-      </div>
+    <!-- ================= 객관식 ================= -->
+    <div id="panel-mcq" role="tabpanel" aria-labelledby="tab-mcq">
+      <section id="start-screen" class="card">
+        <h2>객관식 문제</h2>
+        <p id="total-count" class="total-count"></p>
+        <div id="era-filters"></div>
 
-      <label class="field">
-        <span>문제 수</span>
-        <select id="count-select">
-          <option value="10">10문제</option>
-          <option value="20" selected>20문제</option>
-          <option value="50">50문제 (실전 모의고사 분량)</option>
-          <option value="100">100문제</option>
-          <option value="all">선택한 시대 전체</option>
-        </select>
-      </label>
+        <label class="field">
+          <span>문제 수</span>
+          <select id="count-select">
+            <option value="10">10문제</option>
+            <option value="20" selected>20문제</option>
+            <option value="50">50문제 (실전 모의고사 분량)</option>
+            <option value="100">100문제</option>
+            <option value="all">선택한 시대 전체</option>
+          </select>
+        </label>
 
-      <p id="start-msg" class="msg" hidden></p>
-      <p id="load-error" class="msg error" hidden>
-        문제를 불러오지 못했어요. index.html 파일을 바로 열었다면 로컬 서버로 실행해 주세요. (README 참고)
-      </p>
+        <p id="start-msg" class="msg" hidden></p>
+        <p class="msg load-error" hidden>문제를 불러오지 못했어요. index.html 파일을 바로 열었다면 로컬 서버로 실행해 주세요. (README 참고)</p>
 
-      <button type="button" id="start-btn" class="primary-btn" disabled>시작하기</button>
+        <button type="button" id="start-btn" class="primary-btn wide" disabled>시작하기</button>
 
-      <div class="wrong-note">
-        <h3>오답 노트</h3>
-        <p>저장된 오답: <strong id="wrong-count">0</strong>문제</p>
-        <div class="row">
-          <button type="button" id="wrong-only-btn" class="secondary-btn" disabled>오답만 풀기</button>
-          <button type="button" id="clear-wrong-btn" class="text-btn" disabled>오답 노트 비우기</button>
+        <div class="wrong-note">
+          <h3>오답 노트</h3>
+          <p>저장된 오답: <strong id="wrong-count">0</strong>문제</p>
+          <div class="row">
+            <button type="button" id="wrong-only-btn" class="secondary-btn" disabled>오답만 풀기</button>
+            <button type="button" id="clear-wrong-btn" class="text-btn" disabled>오답 노트 비우기</button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 문제 화면 -->
-    <section id="quiz-screen" class="card" hidden>
-      <div class="progress-info">
-        <span id="progress-text"></span>
-        <span id="score-text"></span>
-      </div>
-      <div class="progress-bar"><div id="progress-fill"></div></div>
+      <section id="quiz-screen" class="card" hidden>
+        <div class="progress-info">
+          <span id="progress-text"></span>
+          <span id="score-text"></span>
+        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
 
-      <div class="tags">
-        <span id="era-tag" class="tag"></span>
-        <span id="topic-tag" class="tag tag-muted"></span>
-      </div>
+        <div class="tags">
+          <span id="era-tag" class="tag"></span>
+          <span id="topic-tag" class="tag tag-muted"></span>
+        </div>
 
-      <h2 id="question-text" class="question"></h2>
-      <ol id="choices" class="choices"></ol>
+        <h2 id="question-text" class="question"></h2>
+        <ol id="choices" class="choices"></ol>
 
-      <div class="hint-area">
-        <button type="button" id="hint-btn" class="hint-btn">💡 힌트 보기 <kbd>H</kbd></button>
-        <p id="hint-text" class="hint-text" hidden aria-live="polite"></p>
-      </div>
+        <div class="hint-area">
+          <button type="button" id="hint-btn" class="hint-btn">💡 힌트 보기 <kbd>H</kbd></button>
+          <p id="hint-text" class="hint-text" hidden aria-live="polite"></p>
+        </div>
 
-      <div id="feedback" class="feedback" hidden aria-live="polite">
-        <p id="feedback-title" class="feedback-title"></p>
-        <p id="explanation"></p>
-      </div>
+        <div id="feedback" class="feedback" hidden aria-live="polite">
+          <p id="feedback-title" class="feedback-title"></p>
+          <p id="explanation"></p>
+        </div>
 
-      <div class="row end">
-        <button type="button" id="quit-btn" class="text-btn">그만하기</button>
-        <button type="button" id="next-btn" class="primary-btn" hidden>다음 문제</button>
-      </div>
-    </section>
+        <div class="row end">
+          <button type="button" id="quit-btn" class="text-btn">그만하기</button>
+          <button type="button" id="next-btn" class="primary-btn" hidden>다음 문제</button>
+        </div>
+      </section>
 
-    <!-- 결과 화면 -->
-    <section id="result-screen" class="card" hidden>
-      <h2>결과</h2>
-      <p class="score-big"><span id="result-score"></span></p>
-      <p id="result-msg" class="result-msg"></p>
-      <p id="result-hints" class="result-msg"></p>
+      <section id="result-screen" class="card" hidden>
+        <h2>결과</h2>
+        <p class="score-big"><span id="result-score"></span></p>
+        <p id="result-msg" class="result-msg"></p>
+        <p id="result-hints" class="result-msg"></p>
 
-      <div class="row">
-        <button type="button" id="retry-wrong-btn" class="primary-btn">틀린 문제 다시 풀기</button>
-        <button type="button" id="home-btn" class="secondary-btn">처음으로</button>
-      </div>
+        <div class="row">
+          <button type="button" id="retry-wrong-btn" class="primary-btn">틀린 문제 다시 풀기</button>
+          <button type="button" id="home-btn" class="secondary-btn">처음으로</button>
+        </div>
 
-      <div id="review" class="review"></div>
-    </section>
+        <div id="review" class="review"></div>
+      </section>
+    </div>
+
+    <!-- ================= OX 퀴즈 ================= -->
+    <div id="panel-ox" role="tabpanel" aria-labelledby="tab-ox" hidden>
+      <section id="ox-start" class="card">
+        <h2>OX 퀴즈</h2>
+        <p class="total-count"><span id="ox-total"></span> · 문장을 읽고 맞으면 O, 틀리면 X를 고르세요.</p>
+        <div id="ox-era-filters"></div>
+
+        <label class="field">
+          <span>문제 수</span>
+          <select id="ox-count">
+            <option value="10">10문제</option>
+            <option value="20" selected>20문제</option>
+            <option value="50">50문제</option>
+            <option value="all">선택한 시대 전체</option>
+          </select>
+        </label>
+
+        <p id="ox-start-msg" class="msg" hidden></p>
+        <p class="msg load-error" hidden>문제를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+        <button type="button" id="ox-start-btn" class="primary-btn wide" disabled>시작하기</button>
+      </section>
+
+      <section id="ox-play" class="card" hidden>
+        <div class="progress-info">
+          <span id="ox-progress"></span>
+          <span id="ox-score"></span>
+        </div>
+        <div class="progress-bar"><div id="ox-progress-fill" class="progress-fill"></div></div>
+
+        <div class="tags"><span id="ox-era" class="tag"></span></div>
+        <p id="ox-statement" class="ox-statement"></p>
+
+        <div class="ox-buttons">
+          <button type="button" class="ox-btn ox-o" data-value="true" aria-label="O, 맞다">O</button>
+          <button type="button" class="ox-btn ox-x" data-value="false" aria-label="X, 틀리다">X</button>
+        </div>
+        <p class="key-help">키보드: <kbd>O</kbd> / <kbd>X</kbd></p>
+
+        <div id="ox-feedback" class="feedback" hidden aria-live="polite">
+          <p id="ox-feedback-title" class="feedback-title"></p>
+          <p id="ox-explanation"></p>
+        </div>
+
+        <div class="row end">
+          <button type="button" id="ox-quit" class="text-btn">그만하기</button>
+          <button type="button" id="ox-next" class="primary-btn" hidden>다음 문제</button>
+        </div>
+      </section>
+
+      <section id="ox-result" class="card" hidden>
+        <h2>결과</h2>
+        <p class="score-big"><span id="ox-result-score"></span></p>
+        <div class="row">
+          <button type="button" id="ox-retry" class="primary-btn">틀린 문제 다시 풀기</button>
+          <button type="button" id="ox-home" class="secondary-btn">처음으로</button>
+        </div>
+        <div id="ox-review" class="review"></div>
+      </section>
+    </div>
+
+    <!-- ================= 단답형 ================= -->
+    <div id="panel-short" role="tabpanel" aria-labelledby="tab-short" hidden>
+      <section id="short-start" class="card">
+        <h2>키워드 단답형</h2>
+        <p class="total-count"><span id="short-total"></span> · 인물, 사건, 제도 이름을 직접 입력하세요. 띄어쓰기는 상관없어요.</p>
+        <div id="short-era-filters"></div>
+
+        <label class="field">
+          <span>문제 수</span>
+          <select id="short-count">
+            <option value="10">10문제</option>
+            <option value="20" selected>20문제</option>
+            <option value="50">50문제</option>
+            <option value="all">선택한 시대 전체</option>
+          </select>
+        </label>
+
+        <p id="short-start-msg" class="msg" hidden></p>
+        <p class="msg load-error" hidden>문제를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+        <button type="button" id="short-start-btn" class="primary-btn wide" disabled>시작하기</button>
+      </section>
+
+      <section id="short-play" class="card" hidden>
+        <div class="progress-info">
+          <span id="short-progress"></span>
+          <span id="short-score"></span>
+        </div>
+        <div class="progress-bar"><div id="short-progress-fill" class="progress-fill"></div></div>
+
+        <div class="tags">
+          <span id="short-era" class="tag"></span>
+          <span id="short-topic" class="tag tag-muted"></span>
+        </div>
+        <h2 id="short-question" class="question"></h2>
+
+        <form id="short-form" class="answer-form" autocomplete="off">
+          <input type="text" id="short-input" class="text-input" placeholder="정답 입력" aria-label="정답 입력" enterkeyhint="done">
+          <button type="submit" id="short-submit" class="primary-btn">제출</button>
+        </form>
+
+        <div class="row">
+          <button type="button" id="short-hint-btn" class="hint-btn">💡 힌트 보기</button>
+          <button type="button" id="short-giveup" class="text-btn">모르겠어요</button>
+        </div>
+        <p id="short-hint-text" class="hint-text" hidden aria-live="polite"></p>
+        <p id="short-choseong" class="hint-text choseong" hidden aria-live="polite"></p>
+
+        <div id="short-feedback" class="feedback" hidden aria-live="polite">
+          <p id="short-feedback-title" class="feedback-title"></p>
+          <p id="short-explanation"></p>
+          <button type="button" id="short-accept" class="text-btn" hidden>표기만 다르게 썼어요 · 정답으로 인정하기</button>
+        </div>
+
+        <div class="row end">
+          <button type="button" id="short-quit" class="text-btn">그만하기</button>
+          <button type="button" id="short-next" class="primary-btn" hidden>다음 문제</button>
+        </div>
+      </section>
+
+      <section id="short-result" class="card" hidden>
+        <h2>결과</h2>
+        <p class="score-big"><span id="short-result-score"></span></p>
+        <p id="short-result-hints" class="result-msg"></p>
+        <div class="row">
+          <button type="button" id="short-retry" class="primary-btn">틀린 문제 다시 풀기</button>
+          <button type="button" id="short-home" class="secondary-btn">처음으로</button>
+        </div>
+        <div id="short-review" class="review"></div>
+      </section>
+    </div>
+
+    <!-- ================= 십자말풀이 ================= -->
+    <div id="panel-cross" role="tabpanel" aria-labelledby="tab-cross" hidden>
+      <section id="cross-start" class="card">
+        <h2>십자말풀이</h2>
+        <p class="total-count"><span id="cross-total"></span> · 고른 시대의 단어로 매번 새로운 퍼즐을 만들어요.</p>
+        <div id="cross-era-filters"></div>
+
+        <label class="field">
+          <span>단어 수</span>
+          <select id="cross-size">
+            <option value="6">6개 (가볍게)</option>
+            <option value="9" selected>9개</option>
+            <option value="12">12개 (도전)</option>
+          </select>
+        </label>
+
+        <p id="cross-start-msg" class="msg" hidden></p>
+        <p class="msg load-error" hidden>단어를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</p>
+        <button type="button" id="cross-start-btn" class="primary-btn wide" disabled>퍼즐 만들기</button>
+      </section>
+
+      <section id="cross-play" class="card" hidden>
+        <div id="cw-grid" class="cw-grid" aria-label="십자말풀이 판"></div>
+
+        <form id="cw-form" class="cw-entry" autocomplete="off">
+          <p id="cw-current" class="cw-current" aria-live="polite"></p>
+          <div class="answer-form">
+            <input type="text" id="cw-input" class="text-input" aria-label="선택한 단어 입력" enterkeyhint="done">
+            <button type="submit" class="primary-btn">입력</button>
+          </div>
+        </form>
+        <p id="cw-status" class="cw-status" aria-live="polite"></p>
+
+        <div class="row cw-tools">
+          <button type="button" id="cw-check" class="secondary-btn">정답 확인</button>
+          <button type="button" id="cw-reveal-letter" class="hint-btn">💡 한 글자 공개</button>
+          <button type="button" id="cw-reveal-all" class="text-btn">정답 보기</button>
+        </div>
+
+        <div class="cw-clues">
+          <div id="cw-across-wrap">
+            <h3>가로 열쇠</h3>
+            <ol id="cw-clues-across" class="cw-clue-list"></ol>
+          </div>
+          <div id="cw-down-wrap">
+            <h3>세로 열쇠</h3>
+            <ol id="cw-clues-down" class="cw-clue-list"></ol>
+          </div>
+        </div>
+
+        <div id="cw-answers-wrap" hidden>
+          <h3>정답과 해설</h3>
+          <div id="cw-answers" class="review"></div>
+        </div>
+
+        <div class="row end">
+          <button type="button" id="cw-home" class="text-btn">처음으로</button>
+          <button type="button" id="cw-new" class="primary-btn">새 퍼즐</button>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="site-footer">
     문제는 한국사능력검정시험 심화 기출의 출제 포인트를 참고하여 새로 작성했습니다.
   </footer>
 
-  <script src="script.js"></script>
+  <script src="js/common.js?v=2"></script>
+  <script src="js/mcq.js?v=2"></script>
+  <script src="js/ox.js?v=2"></script>
+  <script src="js/short.js?v=2"></script>
+  <script src="js/crossword.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
 </body>
 </html>
