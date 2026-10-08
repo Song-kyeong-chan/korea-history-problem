@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국사 퀴즈</title>
+  <meta name="description" content="한국사능력검정시험 심화 기출 출제 포인트로 만든 한국사 퀴즈">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>한국사 퀴즈</h1>
+    <p class="subtitle">한능검 심화 기출 포인트로 정리한 문제</p>
+  </header>
+
+  <main>
+    <!-- 시작 화면 -->
+    <section id="start-screen" class="card">
+      <h2>문제 범위 고르기</h2>
+      <div id="era-filters" class="chips" role="group" aria-label="시대 선택"></div>
+      <div class="row">
+        <button type="button" id="select-all-btn" class="text-btn">전체 선택</button>
+        <button type="button" id="select-none-btn" class="text-btn">전체 해제</button>
+      </div>
+
+      <label class="field">
+        <span>문제 수</span>
+        <select id="count-select">
+          <option value="10">10문제</option>
+          <option value="20">20문제</option>
+          <option value="all" selected>전체</option>
+        </select>
+      </label>
+
+      <p id="start-msg" class="msg" hidden></p>
+      <p id="load-error" class="msg error" hidden>
+        문제를 불러오지 못했어요. index.html 파일을 바로 열었다면 로컬 서버로 실행해 주세요. (README 참고)
+      </p>
+
+      <button type="button" id="start-btn" class="primary-btn" disabled>시작하기</button>
+
+      <div class="wrong-note">
+        <h3>오답 노트</h3>
+        <p>저장된 오답: <strong id="wrong-count">0</strong>문제</p>
+        <div class="row">
+          <button type="button" id="wrong-only-btn" class="secondary-btn" disabled>오답만 풀기</button>
+          <button type="button" id="clear-wrong-btn" class="text-btn" disabled>오답 노트 비우기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 문제 화면 -->
+    <section id="quiz-screen" class="card" hidden>
+      <div class="progress-info">
+        <span id="progress-text"></span>
+        <span id="score-text"></span>
+      </div>
+      <div class="progress-bar"><div id="progress-fill"></div></div>
+
+      <div class="tags">
+        <span id="era-tag" class="tag"></span>
+        <span id="topic-tag" class="tag tag-muted"></span>
+      </div>
+
+      <h2 id="question-text" class="question"></h2>
+      <ol id="choices" class="choices"></ol>
+
+      <div id="feedback" class="feedback" hidden aria-live="polite">
+        <p id="feedback-title" class="feedback-title"></p>
+        <p id="explanation"></p>
+      </div>
+
+      <div class="row end">
+        <button type="button" id="quit-btn" class="text-btn">그만하기</button>
+        <button type="button" id="next-btn" class="primary-btn" hidden>다음 문제</button>
+      </div>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="result-screen" class="card" hidden>
+      <h2>결과</h2>
+      <p class="score-big"><span id="result-score"></span></p>
+      <p id="result-msg" class="result-msg"></p>
+
+      <div class="row">
+        <button type="button" id="retry-wrong-btn" class="primary-btn">틀린 문제 다시 풀기</button>
+        <button type="button" id="home-btn" class="secondary-btn">처음으로</button>
+      </div>
+
+      <div id="review" class="review"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    문제는 한국사능력검정시험 심화 기출의 출제 포인트를 참고하여 새로 작성했습니다.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
