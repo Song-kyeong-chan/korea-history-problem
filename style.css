@@ -231,6 +231,12 @@ button:disabled {
   color: var(--text);
 }
 
+.total-count {
+  margin: -8px 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .msg {
   color: var(--point);
   font-size: 0.95rem;

@@ -62,6 +62,7 @@ function showScreen(name) {
 
 function renderEraFilters() {
   const eras = [...new Set(allQuestions.map((q) => q.era))];
+  $("#total-count").textContent = `총 ${allQuestions.length}문제`;
   const container = $("#era-filters");
   container.innerHTML = "";
 

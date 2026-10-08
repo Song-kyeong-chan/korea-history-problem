@@ -20,6 +20,7 @@
     <!-- 시작 화면 -->
     <section id="start-screen" class="card">
       <h2>문제 범위 고르기</h2>
+      <p id="total-count" class="total-count"></p>
       <div id="era-filters" class="chips" role="group" aria-label="시대 선택"></div>
       <div class="row">
         <button type="button" id="select-all-btn" class="text-btn">전체 선택</button>
@@ -30,8 +31,10 @@
         <span>문제 수</span>
         <select id="count-select">
           <option value="10">10문제</option>
-          <option value="20">20문제</option>
-          <option value="all" selected>전체</option>
+          <option value="20" selected>20문제</option>
+          <option value="50">50문제 (실전 모의고사 분량)</option>
+          <option value="100">100문제</option>
+          <option value="all">선택한 시대 전체</option>
         </select>
       </label>
 
